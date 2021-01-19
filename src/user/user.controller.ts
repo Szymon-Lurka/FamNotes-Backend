@@ -12,7 +12,7 @@ export class UserController {
     @Post('/register')
     register(
         @Body() newUser: RegisterDto,
-    ): Promise<RegisterUserResponse> {
+    ): Promise<string | RegisterUserResponse> {
         return this.userService.register(newUser);
     }
 }

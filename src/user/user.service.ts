@@ -10,12 +10,16 @@ export class UserService {
         const {id, login} = user;
         return {id, login};
     }
-    async register(newUser: RegisterDto): Promise<RegisterUserResponse> {
+    async register(newUser: RegisterDto): Promise<string | RegisterUserResponse> {
+        const didExist = await User.findOne({login: newUser.login});
+        if (didExist) {
+            return 'Już istnieje taki użytkownik!'
+        } else {
         const user = new User();
         user.login = newUser.login;
         user.pwdHash = hashPwd(newUser.pwd);
         await user.save();
-
         return this.filter(user);
+    }
     }
 }
