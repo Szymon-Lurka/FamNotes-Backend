@@ -41,31 +41,19 @@ export class AuthService {
             if(!user) {
                 return res.json({error: 'Nieprawidłowy login lub hasło!'});
             }
-            const token = await this.createToken(await this.generateToken(user));
-
+            await this.createToken(await this.generateToken(user));
+            const userData = {userID: user.id, userToken: user.currentTokenId}
             return res
-                .cookie('jwt', token.accessToken, {
-                    secure: false,
-                    domain: 'localhost',
-                    httpOnly: true,
-                })
-                .json({ok:true});
+                .json({ok:true, userData});
         } catch (e) {
             return res.json({error: e.message});
         }
     };
-    async logout(user:User, res: Response) {
+    async logout(id:string, res: Response) {
         try {
+            const user = await User.findOne({id});
             user.currentTokenId = null;
             await user.save();
-            res.clearCookie(
-                'jwt',
-                {
-                    secure:false,
-                    domain:'localhost',
-                    httpOnly:true,
-                }
-            );
             return res.json({ok:true});
         } catch (e) {
             return res.json({error: e.message});
