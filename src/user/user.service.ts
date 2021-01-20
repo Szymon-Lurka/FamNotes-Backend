@@ -11,6 +11,13 @@ export class UserService {
         return {id, login};
     }
     async register(newUser: RegisterDto): Promise<string | RegisterUserResponse> {
+        const regexSpecial = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)/;
+        if (newUser.login.length < 4 || newUser.login.length > 10) {
+            return 'Nazwa użytkownika powinna mieć minimum 4 znaki i maksymalnie 10 znaków!'
+        };
+        if (newUser.pwd.length < 8 || !!newUser.pwd.search(regexSpecial)) {
+            return 'Hasło powinno zawierać minimum 8 znaków, 1 cyfrę i 1 znak specjalny!'
+        };
         const didExist = await User.findOne({login: newUser.login});
         if (didExist) {
             return 'Już istnieje taki użytkownik!'

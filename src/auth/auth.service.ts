@@ -39,7 +39,7 @@ export class AuthService {
                 pwdHash: hashPwd(req.pwd),
             });
             if(!user) {
-                return res.json({error: 'Invalid login data!'});
+                return res.json({error: 'Nieprawidłowy login lub hasło!'});
             }
             const token = await this.createToken(await this.generateToken(user));
 
