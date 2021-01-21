@@ -35,14 +35,28 @@ export class AuthService {
     async login(req:AuthLoginDto, res: Response): Promise<any> {
         try {
             const user = await User.findOne({
-                login: req.login,
+                where: {
+                    login: req.login,
                 pwdHash: hashPwd(req.pwd),
+                },
+                relations: ['group']
             });
+            console.log(user);
             if(!user) {
                 return res.json({error: 'Nieprawidłowy login lub hasło!'});
             }
             await this.createToken(await this.generateToken(user));
-            const userData = {userID: user.id, userToken: user.currentTokenId}
+            let userGroupID,
+                groupTitle,
+                groupDescription,
+                groupTag;
+            if(user.group !== null) {
+                userGroupID = user.group.id;
+                groupTitle = user.group.name;
+                groupDescription = user.group.description;
+                groupTag = user.group.tag;
+            } else userGroupID = null;
+            const userData = {userID: user.id, userToken: user.currentTokenId, userGroupID, groupTitle, groupDescription, groupTag};
             return res
                 .json({ok:true, userData});
         } catch (e) {

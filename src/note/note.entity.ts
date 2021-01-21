@@ -1,23 +1,20 @@
 import { Group } from "src/group/group.entity";
 import { BaseEntity, Column, Entity, JoinColumn, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 @Entity()
-export class User extends BaseEntity {
+export class Note extends BaseEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string;
-
-    @Column({
-        length: 255,
-    })
-    login:string;
-
     @Column()
-    pwdHash: string;
-
+    title:string;
     @Column({
-        nullable:true,
-        default:null,
+        default: () => 'CURRENT_TIMESTAMP'
     })
-    currentTokenId: string | null;
-    @ManyToOne(type => Group, entity => entity.users)
+    createdAt: Date;
+    @Column()
+    content: string;
+    @Column()
+    author: string;
+    @ManyToOne(type => Group, entity => entity.notes)
+    @JoinColumn()
     group: Group;
 }
