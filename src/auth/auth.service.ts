@@ -56,7 +56,13 @@ export class AuthService {
                 groupDescription = user.group.description;
                 groupTag = user.group.tag;
             } else userGroupID = null;
-            const userData = {userID: user.id, userToken: user.currentTokenId, userGroupID, groupTitle, groupDescription, groupTag};
+            const userData = {
+                userID: user.id,
+                 userToken: user.currentTokenId,
+                  userGroupID, groupTitle,
+                   groupDescription,
+                    groupTag
+                };
             return res
                 .json({ok:true, userData});
         } catch (e) {
