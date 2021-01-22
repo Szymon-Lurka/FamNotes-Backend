@@ -8,7 +8,7 @@ export class GroupService {
         let isGroupExist = await Group.findOne({
             name: data.name
         });
-        if(isGroupExist) {
+        if(data.name.length < 3 || isGroupExist) {
             return {isSuccess: false, message: 'Istnieje już taka grupa!'}
         }
         let isTagGroupExist = await Group.findOne({
@@ -25,9 +25,7 @@ export class GroupService {
         newGroup.description = data.description;
         newGroup.tag = data.groupTag;
         await newGroup.save();
-        console.log(data);
         const user = await User.findOne({id: data.userID});
-        console.log(data.userID);
         user.group = newGroup;
         user.save();
         return {
